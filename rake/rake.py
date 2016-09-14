@@ -1,7 +1,7 @@
 # Implementation of RAKE - Rapid Automtic Keyword Exraction algorithm
 # as described in:
-# Rose, S., D. Engel, N. Cramer, and W. Cowley (2010). 
-# Automatic keyword extraction from indi-vidual documents. 
+# Rose, S., D. Engel, N. Cramer, and W. Cowley (2010).
+# Automatic keyword extraction from individual documents.
 # In M. W. Berry and J. Kogan (Eds.), Text Mining: Applications and Theory.unknown: John Wiley and Sons, Ltd.
 #
 # NOTE: The original code (from https://github.com/aneesha/RAKE)
@@ -9,6 +9,9 @@
 # with a set of heuristics to decide whether a phrase is an acceptable candidate
 # as well as the ability to set frequency and phrase length parameters
 # important when dealing with longer documents
+#
+# NOTE: The code was reorganized as package by eugeneai.
+#
 
 from __future__ import absolute_import
 from __future__ import print_function
@@ -27,7 +30,6 @@ def is_number(s):
         return True
     except ValueError:
         return False
-
 
 def load_stop_words(stop_word_file):
     """
