@@ -7,7 +7,7 @@ README = os.path.join(os.path.dirname(__file__), 'README.md')
 REQUIREMENT = os.path.join(os.path.dirname(__file__), 'requirements.txt')
 
 setup(name= 'rake',
-	version='1.0',
+	version='1.0.1',
 	author ='yilan',
 	author_email="zhaoyinlan@live.cn",
 	license="MIT",
