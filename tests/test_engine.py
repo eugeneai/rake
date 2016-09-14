@@ -21,7 +21,8 @@ TEXTS = {
        "Совместимость системы линейных ограничений "\
        "над множеством натуральных чисел. "\
        "Рассмотрены критерии совместимости системы "\
-       "линейных диофантовых уравнений. "\
+       "линейных диофантовых уравнений, строгих неравенств и "\
+       "нестрогих неравенств. "\
        "Получены верхние пределы компонент минимального "\
        "множества решений и алгоритмы построения "\
        "минимальных образующих множеств решений для "\
@@ -31,6 +32,32 @@ TEXTS = {
        "решении всех рассмотренных типов систем "\
        "и систем смешанного типа."
        }
+
+#
+# Manual keywords
+#
+# linear constraints, set of natural numbers, linear Diophantine equations,
+# strict inequations, nonstrict inequations, upper bounds, minimal generating sets
+#
+# "en" stop words:
+#
+# ('minimal generating sets', 8.666666666666666),
+# ('linear diophantine equations', 8.5),
+# ('minimal supporting set', 7.666666666666666),
+# ('minimal set', 4.666666666666666),
+# ('linear constraints', 4.5),
+# ('upper bounds', 4.0),
+# ('nonstrict inequations', 4.0),
+# ('strict inequations', 4.0),
+# ('mixed types', 3.666666666666667),
+# ('corresponding algorithms', 3.5),
+# ('considered types', 3.166666666666667),
+# ......
+#
+# TODO:
+#
+# Extending stop-word list https://cyberleninka.ru/article/n/predstavlenie-dokumentov-v-zadache-klasterizatsii-annotatsiy-nauchnyh-tekstov
+#
 
 
 class TestBasic:
