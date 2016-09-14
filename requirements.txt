@@ -1,2 +1,4 @@
-pbp.skels==0.2.4
-pypirc==1.0.4
+# pbp.skels==0.2.4
+# pypirc==1.0.4
+stop-words
+
