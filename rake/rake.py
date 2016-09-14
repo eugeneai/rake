@@ -75,8 +75,15 @@ def split_sentences(text):
     return sentences
 
 
-def build_stop_word_regex(stop_word_file_path):
-    stop_word_list = load_stop_words(stop_word_file_path)
+def build_stop_word_regex(stop_word_file_path, lang):
+    if stop_word_file_path is not None:
+        stop_word_list = load_stop_words(stop_word_file_path)
+    elif lang is not None:
+        from stop_words import get_stop_words
+        stop_word_list = get_stop_words(lang)
+    else:
+        raise ValueError("either stop_word_file_path or lang must be defined")
+
     stop_word_regex_list = []
     for word in stop_word_list:
         word_regex = '\\b' + word + '\\b'
@@ -184,14 +191,21 @@ class Rake(object):
                  max_words_length=5,
                  min_keyword_frequency=1):
         # stoppath = os.path.join(os.path.dirname(__file__), "SmartStoplist.txt")
+        if lang is None and stop_words_path is None:
+            raise ValueError("either stop_word_path or lang parameter must be supplied")
         self.__lang = lang
         self.__stop_words_path = stop_words_path
-        self.__stop_words_pattern = build_stop_word_regex(stop_words_path)
+        self.__stop_words_pattern = None
         self.__min_char_length = min_char_length
         self.__max_words_length = max_words_length
         self.__min_keyword_frequency = min_keyword_frequency
 
+    def setup(self):
+        if self.__stop_words_pattern is None:
+            self.__stop_words_pattern = build_stop_word_regex(self.__stop_words_path, self.__lang)
+
     def run(self, text):
+        self.setup()
         sentence_list = split_sentences(text)
 
         phrase_list = generate_candidate_keywords(
