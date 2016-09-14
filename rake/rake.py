@@ -24,12 +24,14 @@ import os
 debug = False
 test = False
 
+
 def is_number(s):
     try:
         float(s) if '.' in s else int(s)
         return True
     except ValueError:
         return False
+
 
 def load_stop_words(stop_word_file):
     """
@@ -56,7 +58,8 @@ def separate_words(text, min_word_return_size):
     for single_word in splitter.split(text):
         current_word = single_word.strip().lower()
         #leave numbers in phrase, but don't count as words, since they tend to invalidate scores of their phrases
-        if len(current_word) > min_word_return_size and current_word != '' and not is_number(current_word):
+        if len(current_word) > min_word_return_size and current_word != '' and not is_number(
+                current_word):
             words.append(current_word)
     return words
 
@@ -66,7 +69,8 @@ def split_sentences(text):
     Utility function to return a list of sentences.
     @param text The text that must be split in to sentences.
     """
-    sentence_delimiters = re.compile(u'[\\[\\]\n.!?,;:\t\\-\\"\\(\\)\\\'\u2019\u2013]')
+    sentence_delimiters = re.compile(
+        u'[\\[\\]\n.!?,;:\t\\-\\"\\(\\)\\\'\u2019\u2013]')
     sentences = sentence_delimiters.split(text)
     return sentences
 
@@ -77,18 +81,23 @@ def build_stop_word_regex(stop_word_file_path):
     for word in stop_word_list:
         word_regex = '\\b' + word + '\\b'
         stop_word_regex_list.append(word_regex)
-    stop_word_pattern = re.compile('|'.join(stop_word_regex_list), re.IGNORECASE)
+    stop_word_pattern = re.compile('|'.join(stop_word_regex_list),
+                                   re.IGNORECASE)
     return stop_word_pattern
 
 
-def generate_candidate_keywords(sentence_list, stopword_pattern, min_char_length=1, max_words_length=5):
+def generate_candidate_keywords(sentence_list,
+                                stopword_pattern,
+                                min_char_length=1,
+                                max_words_length=5):
     phrase_list = []
     for s in sentence_list:
         tmp = re.sub(stopword_pattern, '|', s.strip())
         phrases = tmp.split("|")
         for phrase in phrases:
             phrase = phrase.strip().lower()
-            if phrase != "" and is_acceptable(phrase, min_char_length, max_words_length):
+            if phrase != "" and is_acceptable(phrase, min_char_length,
+                                              max_words_length):
                 phrase_list.append(phrase)
     return phrase_list
 
@@ -143,12 +152,15 @@ def calculate_word_scores(phraseList):
     word_score = {}
     for item in word_frequency:
         word_score.setdefault(item, 0)
-        word_score[item] = word_degree[item] / (word_frequency[item] * 1.0)  #orig.
+        word_score[item] = word_degree[item] / (word_frequency[item] * 1.0
+                                                )  #orig.
     #word_score[item] = word_frequency[item]/(word_degree[item] * 1.0) #exp.
     return word_score
 
 
-def generate_candidate_keyword_scores(phrase_list, word_score, min_keyword_frequency=1):
+def generate_candidate_keyword_scores(phrase_list,
+                                      word_score,
+                                      min_keyword_frequency=1):
     keyword_candidates = {}
 
     for phrase in phrase_list:
@@ -165,8 +177,14 @@ def generate_candidate_keyword_scores(phrase_list, word_score, min_keyword_frequ
 
 
 class Rake(object):
-    def __init__(self, stop_words_path, min_char_length=1, max_words_length=5, min_keyword_frequency=1):
+    def __init__(self,
+                 stop_words_path=None,
+                 lang=None,
+                 min_char_length=1,
+                 max_words_length=5,
+                 min_keyword_frequency=1):
         # stoppath = os.path.join(os.path.dirname(__file__), "SmartStoplist.txt")
+        self.__lang = lang
         self.__stop_words_path = stop_words_path
         self.__stop_words_pattern = build_stop_word_regex(stop_words_path)
         self.__min_char_length = min_char_length
@@ -176,13 +194,19 @@ class Rake(object):
     def run(self, text):
         sentence_list = split_sentences(text)
 
-        phrase_list = generate_candidate_keywords(sentence_list, self.__stop_words_pattern, self.__min_char_length, self.__max_words_length)
+        phrase_list = generate_candidate_keywords(
+            sentence_list, self.__stop_words_pattern, self.__min_char_length,
+            self.__max_words_length)
 
         word_scores = calculate_word_scores(phrase_list)
 
-        keyword_candidates = generate_candidate_keyword_scores(phrase_list, word_scores, self.__min_keyword_frequency)
+        keyword_candidates = generate_candidate_keyword_scores(
+            phrase_list, word_scores, self.__min_keyword_frequency)
 
-        sorted_keywords = sorted(six.iteritems(keyword_candidates), key=operator.itemgetter(1), reverse=True)
+        sorted_keywords = sorted(
+            six.iteritems(keyword_candidates),
+            key=operator.itemgetter(1),
+            reverse=True)
         return sorted_keywords
 
 
@@ -202,10 +226,14 @@ if test:
     wordscores = calculate_word_scores(phraseList)
 
     # generate candidate keyword scores
-    keywordcandidates = generate_candidate_keyword_scores(phraseList, wordscores)
+    keywordcandidates = generate_candidate_keyword_scores(phraseList,
+                                                          wordscores)
     if debug: print(keywordcandidates)
 
-    sortedKeywords = sorted(six.iteritems(keywordcandidates), key=operator.itemgetter(1), reverse=True)
+    sortedKeywords = sorted(
+        six.iteritems(keywordcandidates),
+        key=operator.itemgetter(1),
+        reverse=True)
     if debug: print(sortedKeywords)
 
     totalKeywords = len(sortedKeywords)
